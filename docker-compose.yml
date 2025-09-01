@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ENV=development
+      - SERPAPI_KEY=65bd52cf513937e3cae6a2c6f3f08e3f45e3ef3b5c59ea8f99604f01c6733bf0
+
+
+  test:
+    build: .
+    command: npm test
+    profiles:
+      - test
+
