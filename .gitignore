@@ -1,0 +1,14 @@
+# Ignoruj citlivé soubory
+.env
+
+# Ignoruj závislosti
+node_modules/
+
+# Ignoruj logy
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Ignoruj systémové soubory
+.DS_Store
+Thumbs.db

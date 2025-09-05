@@ -7,21 +7,68 @@
 <body>
   <h1>Vyhledávání klíčového slova</h1>
   <input type="text" id="query" placeholder="Zadej klíčové slovo">
+  <select id="format">
+    <option value="json">JSON</option>
+    <option value="csv">CSV</option>
+    <option value="xml">XML</option>
+  </select>
   <button onclick="search()">Hledat</button>
   <pre id="results"></pre>
 
   <script>
-    async function search() {
+     async function search() {
       const query = document.getElementById('query').value;
+      const format = document.getElementById('format').value;
+
       const response = await fetch(`/search?q=${encodeURIComponent(query)}`);
       const data = await response.json();
+
       document.getElementById('results').textContent = JSON.stringify(data, null, 2);
 
-      // Uložení jako JSON
-      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+      if (format === 'json') exportJSON(data);
+      else if (format === 'csv') exportCSV(data);
+      else if (format === 'xml') exportXML(data);
+    }
+
+    function exportJSON(data) {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      downloadBlob(blob, 'vysledky.json');
+    }
+
+    function exportCSV(data) {
+      const headers = ['title', 'link', 'snippet'];
+      const rows = data.map(obj =>
+        headers.map(h => `"${(obj[h] || '').replace(/"/g, '""')}"`).join(',')
+      );
+      const csvContent = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      downloadBlob(blob, 'vysledky.csv');
+    }
+
+    function exportXML(data) {
+      let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<results>\n';
+      data.forEach(item => {
+        xml += '  <result>\n';
+        xml += `    <title>${escapeXML(item.title)}</title>\n`;
+        xml += `    <link>${escapeXML(item.link)}</link>\n`;
+        xml += `    <snippet>${escapeXML(item.snippet)}</snippet>\n`;
+        xml += '  </result>\n';
+      });
+      xml += '</results>';
+      const blob = new Blob([xml], { type: 'application/xml' });
+      downloadBlob(blob, 'vysledky.xml');
+    }
+
+    function escapeXML(str) {
+      return str.replace(/[<>&'"]/g, c => ({
+        '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;'
+      }[c]));
+    }
+
+    function downloadBlob(blob, filename) {
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = 'vysledky.json';
+      link.download = filename;
       link.click();
     }
   </script>

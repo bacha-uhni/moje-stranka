@@ -1,0 +1,34 @@
+# 🔍 Vyhledávač přes SerpAPI
+
+Jednoduchá webová aplikace postavená na Node.js a Express, která umožňuje vyhledávání pomocí [SerpAPI](https://serpapi.com). Výsledky se zobrazují přímo na stránce. Projekt je připravený pro nasazení přes Docker a Render.
+
+---
+
+## 🚀 Funkce
+
+- Vyhledávání přes Google pomocí SerpAPI
+- Frontend v HTML + JavaScript
+- Backend v Express.js
+- Testy pomocí Jest
+- Nasazení přes Docker Compose
+- Bezpečné načítání API klíče z `.env`
+
+---
+
+## 🧰 Technologie
+
+- Node.js
+- Express
+- dotenv
+- node-fetch
+- Jest
+- Docker / Docker Compose
+
+---
+
+## 📦 Instalace
+
+```bash
+git clone https://github.com/bacha-uhni/moje-stranka.git
+cd moje-stranka
+npm install
